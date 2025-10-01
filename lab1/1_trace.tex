@@ -1,0 +1,20 @@
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+	Шаг & Машинный код & Команда & \multicolumn{9}{|c|}{Регистры} & Флаги \\
+	& & & AX & BX & CX & DX & SP & DS & SS & CS & IP & CZSOPAID \\
+\hline
+	1 & B8BD48 & MOV AX,48BD & 48BD & F560 & 0192 & F664 & 0100 & 489D & 48AD & 48BF & 0003 & 00000010 \\
+\hline
+	2 & 8ED8 & MOV DS,AX & 48BD & F560 & 0192 & F664 & 0100 & 48BD & 48AD  & 48BF & 0005 & 00000010 \\
+\hline
+	3 & B409 & MOV AH,09 & 09BD & F560 & 0192 & F664 & 0100 & 48BD & 48AD & 48BF & 0007 & 00000010 \\
+\hline
+	4 & BA0000 & MOV DX,0000 & 09BD & F560 & 0192 & 0000 & 0100 & 48BD & 48AD & 48BF & 000A & 00000010 \\
+\hline 
+	5 & CD21 & INT 21 & 09BD & F560 & 0192 & 0000 & 0100 & 48BD & 48AD & 48BF & 000C & 00000010 \\
+\hline
+	6 & B8004C & MOV AX,4C00 & 4C00 & F560 & 0192 & 0000 & 0100 & 48BD & 48AD & 48BF & 000F & 00000010 \\
+\hline
+	7 & CD21 & INT21 & 0192 & F560 & 0192 & F664 & 0106 & 2110 & 0192 & 0000 & 0000 & 10100011 \\
+\hline
+\end{tabular}
