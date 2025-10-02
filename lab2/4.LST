@@ -1,0 +1,68 @@
+Turbo Assembler	 Version 2.0	    10/02/25 20:58:44	    Page 1
+4.asm
+
+
+
+      1	0000			     .model tiny ; модель	памяти tiny
+      2	0000			     .code
+      3				     org 100h
+      4	0100			     start:
+      5				     ; вывод строки на экран
+      6	0100  B4 09		     mov AH,09h
+      7	0102  BA 012Cr		     mov DX,offset Info
+      8	0105  CD 21		     int 21h
+      9				     ; вывод цифры из регистра AX на экран
+     10	0107  B8 0008		     mov AX,8h
+     11	010A  04 30		     add AL,30h
+     12	010C  8A D0		     mov DL,AL
+     13	010E  B4 02		     mov AH,02h
+     14	0110  CD 21		     int 21h
+     15				     ; вывод пробела на экран
+     16	0112  B8 0000		     mov AX,0h
+     17	0115  8A D0		     mov DL,AL
+     18	0117  B4 02		     mov AH,02h
+     19	0119  CD 21		     int 21h
+     20				     ; вывод цифры из регистра BX на экран
+     21	011B  BB 0003		     mov BX,3h
+     22	011E  80 C3 30		     add BL,30h
+     23	0121  8A D3		     mov DL,BL
+     24	0123  B4 02		     mov AH,02h
+     25	0125  CD 21		     int 21h
+     26				     ; завершение программы
+     27	0127  B8 4C00		     mov AX,4C00h
+     28	012A  CD 21		     int 21h
+     29	012C  50 6F 74 61 70 6B	69+  Info db 'Potapkina	Margarita, 251',0Dh,0Ah,'$' ; Строка с именем, фамилией+
+     30	      6E 61 20 4D 61 72	67+  и	переводом строки
+     31	      61 72 69 74 61 2C	20+
+     32	      32 35 31 0D 0A 24
+     33				     end start
+Turbo Assembler	 Version 2.0	    10/02/25 20:58:44	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "10/02/25"
+??FILENAME			  Text	 "4	  "
+??TIME				  Text	 "20:58:44"
+??VERSION			  Number 0200
+@CODE				  Text	 DGROUP
+@CODESIZE			  Text	 0
+@CPU				  Text	 0101H
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 4
+@MODEL				  Text	 1
+@WORDSIZE			  Text	 2
+INFO				  Byte	 DGROUP:012C
+START				  Near	 DGROUP:0100
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  _DATA				  16  0000 Word	  Public  DATA
+  _TEXT				  16  0147 Word	  Public  CODE
+

@@ -1,0 +1,117 @@
+Turbo Assembler	 Version 2.0	    10/01/25 21:11:38	    Page 1
+5.asm
+
+
+
+      1				     ; сегмент стека
+      2	0000			     stak segment stack	'stack'
+      3	0000  0100*(??)		     db	256 dup	(?)
+      4	0100			     stak ends
+      5				     ; сегмент данных
+      6	0000			     data segment 'data'
+      7	0000  50 6F 74 61 70 6B	69+  Info db 'Potapkina	Margarita, 251$' ; строка	с именем	и фамилией
+      8	      6E 61 20 4D 61 72	67+
+      9	      61 72 69 74 61 2C	20+
+     10	      32 35 31 24
+     11	0019  0D 0A 24		     NewLine db	'',0Dh,0Ah,'$' ; перевод	строки
+     12	001C			     data ends
+     13				     ; сегмент кода
+     14	0000			     code segment 'code'
+     15				     assume CS:code,DS:data,SS:stak
+     16				     ; процедура для вывода цифры на экран
+     17	0000			     PrintDigit	proc
+     18	0000  80 C2 30			     add DL,30h
+     19	0003  50			     push AX
+     20	0004  B4 02			     mov AH,02h
+     21	0006  CD 21			     int 21h
+     22	0008  58			     pop AX
+     23	0009  C3			     ret
+     24	000A			     PrintDigit	endp
+     25				     ; процедура для вывода пробела на экран
+     26	000A			     PrintSpace	proc
+     27	000A  50			     push AX
+     28	000B  B8 0000			     mov AX,0h
+     29	000E  8A D0			     mov DL,AL
+     30	0010  B4 02			     mov AH,02h
+     31	0012  CD 21			     int 21h
+     32	0014  58			     pop AX
+     33	0015  C3			     ret
+     34	0016			     PrintSpace	endp
+     35				     ; процедура для вывода строки на	экран
+     36	0016			     PrintString proc
+     37	0016  50			     push AX
+     38	0017  B4 09			     mov AH,09h
+     39	0019  CD 21			     int 21h
+     40	001B  58			     pop AX
+     41	001C  C3			     ret
+     42	001D			     PrintString endp
+     43	001D			     start:
+     44				     ; обязательная	инициализация регистра DS
+     45	001D  B8 0000s		     mov AX,data
+     46	0020  8E D8		     mov DS,AX
+     47				     ; вывод строки с именем и номером группы
+     48	0022  BA 0000r		     mov DX,offset Info
+     49	0025  E8 FFEE		     call PrintString
+     50				     ; вывод перевода строки
+     51	0028  BA 0019r		     mov DX,offset NewLine
+     52	002B  E8 FFE8		     call PrintString
+     53				     ; вывод цифры из регистра AX
+     54	002E  B8 0007		     mov AX,07h
+     55	0031  8A D0		     mov DL,AL
+     56	0033  E8 FFCA		     call PrintDigit
+     57				     ; вывод пробела
+Turbo Assembler	 Version 2.0	    10/01/25 21:11:38	    Page 2
+5.asm
+
+
+
+     58	0036  E8 FFD1		     call PrintSpace
+     59				     ; вывод цифры из регистра BX
+     60	0039  BB 0005		     mov BX,05h
+     61	003C  8A D3		     mov DL,BL
+     62	003E  E8 FFBF		     call PrintDigit
+     63				     ; вывод перевода строки
+     64	0041  BA 0019r		     mov DX,offset NewLine
+     65	0044  E8 FFCF		     call PrintString
+     66				     ; обмен значений регистров AX и BX и выполнение тех же  +
+     67				     действий
+     68	0047  93		     XCHG AX,BX
+     69	0048  8A D0		     mov DL,AL
+     70	004A  E8 FFB3		     call PrintDigit
+     71	004D  E8 FFBA		     call PrintSpace
+     72	0050  8A D3		     mov DL,BL
+     73	0052  E8 FFAB		     call PrintDigit
+     74				     ;завершение программы
+     75	0055  B8 4C00		     mov AX,4C00h
+     76	0058  CD 21		     int 21h
+     77	005A			     code ends
+     78				     end start
+Turbo Assembler	 Version 2.0	    10/01/25 21:11:38	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "10/01/25"
+??FILENAME			  Text	 "5	  "
+??TIME				  Text	 "21:11:38"
+??VERSION			  Number 0200
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 5
+@WORDSIZE			  Text	 2
+INFO				  Byte	 DATA:0000
+NEWLINE				  Byte	 DATA:0019
+PRINTDIGIT			  Near	 CODE:0000
+PRINTSPACE			  Near	 CODE:000A
+PRINTSTRING			  Near	 CODE:0016
+START				  Near	 CODE:001D
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  005A Para	  none	  CODE
+DATA				  16  001C Para	  none	  DATA
+STAK				  16  0100 Para	  Stack	  STACK
+

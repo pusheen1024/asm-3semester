@@ -1,0 +1,9 @@
+_minted
+*.aux
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+*.EXE
+*.COM
+*.OBJ
