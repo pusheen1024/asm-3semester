@@ -7,7 +7,7 @@ data ends
 code segment 'code'
 assume CS:code,DS:data,SS:stak
 ; процедура для вывода строки на экран
-PrintString proc far
+PrintString proc 
 	push AX
 	mov AH,09h
 	int 21h
@@ -15,7 +15,7 @@ PrintString proc far
 	ret
 PrintString endp
 ; процедура для вывода цифры на экран
-PrintDigit proc far
+PrintDigit proc 
 	push AX
 	mov AH,02h
 	add DL,30h
