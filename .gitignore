@@ -8,5 +8,7 @@ _minted
 *.out
 *.pdf
 *.EXE
+*.exe
 *.COM
 *.OBJ
+*.LST
