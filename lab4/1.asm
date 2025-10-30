@@ -4,6 +4,7 @@ db 256 dup(?)
 stak ends
 
 data segment 'data'
+Info db 'Potapkina Margarita, 251$' ; строка с ФИО
 NewLine db 0Dh,0Ah,'$' ; символы перевода строки
 arr db 20 dup(0) ; массив
 res db 4 dup(' '),'$' ; строка для записи числа
@@ -11,15 +12,20 @@ data ends
 
 code segment 'code'
 assume CS:code,DS:data,SS:stak
+; процедура для вывода строки
+PrintString proc
+	push AX
+	mov AH,09h
+	int 21h
+	pop AX
+	ret
+PrintString endp
 ; процедура для перевода строки
 PrintNL proc
-	push AX
 	push DX
-	mov AH,09h
 	mov DX,offset NewLine
-	int 21h
+	call PrintString
 	pop DX
-	pop AX
 	ret
 PrintNL endp
 ; процедура для вывода числа из массива
@@ -44,6 +50,10 @@ PrintNumber endp
 start:
 mov AX,data
 mov DS,AX
+mov DX,offset Info
+call PrintString
+call PrintNL
+mov DX,0
 mov CX,10 ; количество итераций
 mov BL,2 ; первый элемент
 mov SI,0 ; индекс первого элемента
