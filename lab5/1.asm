@@ -4,8 +4,6 @@ db 256 dup(?)
 stak ends
 
 data segment 'data'
-row db ? ; номер строки
-col db ? ; номер столбца
 mode db ? ; переменная, куда сохраняется текущий режим
 data ends
 
@@ -20,7 +18,10 @@ int 10h
 mov mode,AL ; получить значение текущего режима
 mov AH,00h
 mov AL,03
-int 10h ; выставить текстовый режим с номером 03
+int 10h ; выставить видеорежим с номером 03
+mov AH,05h
+mov AL,01h
+int 10h ; установить активную страницу (1)
 pop AX
 ret
 set_mode endp
@@ -35,60 +36,33 @@ pop AX
 ret
 ret_mode endp
 
-; процедура для установки курсора в нужную позицию
-cursor proc
+B10DISPLAY proc
 pusha
-mov AH,02h
-mov BH,0 ; номер страницы
-mov DH,row ; номер строки
-mov DL,col ; номер столбца
-int 10h
+mov AL,41h ; код первого символа (A)
+mov AH,0Ah ; цвет первого ряда символов
+mov DI,830 ; начальная позиция 5:15, ((5 * 80) + 15) * 2 = 830
+mov CX,5 ; количество строк
+rows:
+  push CX
+  mov CX,10 ; количество столбцов
+  cols:
+    mov ES:word ptr[DI],AX
+    add DI,2
+  loop cols
+  add DI,140 ; (80 - 10) * 2 = 140 - для перехода на следующую строку
+  inc AL ; изменить код выводимого символа
+  inc AH ; изменить цвет
+  pop CX
+loop rows
 popa
 ret
-cursor endp
-
-; процедура для очистки экрана
-clear proc
-pusha
-mov AH,06h ; выполнить прокрутку экрана вверх
-mov AL,00h
-mov CX,0000
-mov DX,184Fh
-int 10h
-popa
-ret
-clear endp
-
-; процедура для вывода ASCII-символа
-print proc
-pusha
-mov AH,09h
-mov BH,0 ; номер страницы
-mov CX,1 ; число символов
-int 10h			
-popa
-ret
-print endp
+B10DISPLAY endp
 
 start:
-call clear
+mov AX,0b900h ; организовать прямую запись данных в видеопамять
+mov ES,AX
 call set_mode
-mov AL,41h ; код первого символа (A)
-mov BL,0Ah ; цвет первого ряда символов
-mov row,5
-rows:
-  mov col,15
-  cols: 
-    call cursor
-	call print
-	inc col
-	cmp col,25
-  loopne cols
-  inc row
-  inc AL
-  inc BL
-  cmp row,10
-loopne rows
+call B10DISPLAY
 mov AH,10h ; запрос на ввод символа с клавиатуры
 int 16h
 call ret_mode ; возврат к предыдущему режиму
